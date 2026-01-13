@@ -262,21 +262,21 @@ local moraleTab = Window:NewTab("morale modding")
 local moraleSection = moraleTab:NewSection("inf morale")
 
 moraleSection:NewButton("morale mod", "makes you not lose morale", function()
-   local rep = game:GetService("ReplicatedStorage")
-   local StarterGui = game:GetService("StarterGui")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local StarterGui = game:GetService("StarterGui")
 
-   local function notify(title, text)
-      pcall(function()
-         StarterGui:SetCore("SendNotification", {
-             Title = title,
-             Text = text,
-             Duration = 4
-         })
-      end)
-   end
+    local function notify(title, text)
+        pcall(function()
+            StarterGui:SetCore("SendNotification", {
+                Title = title,
+                Text = text,
+                Duration = 4
+            })
+        end)
+    end
 
-   --find value
-    local Game = rep:FindFirstChild("GameInfo")
+    -- find value
+    local Game = ReplicatedStorage:FindFirstChild("GameInfo")
     local Server = Game and Game:FindFirstChild("ServerInfo")
     local MoraleLoss = Server and Server:FindFirstChild("MoraleLossMinFlagDIST")
 
@@ -288,12 +288,13 @@ moraleSection:NewButton("morale mod", "makes you not lose morale", function()
         return
     end
 
-   MoraleLoss.value = 1000000
+    -- set value
+    MoraleLoss.Value = 1000000
 
-   if MoraleLoss.value == 1000000 then
+    if MoraleLoss.Value == 1000000 then
         notify(
             "Success",
-            "morale modded successfully" " xqtz was here "
+            "Morale modded successfully" .. " xqtz was here"
         )
     else
         notify(
@@ -302,6 +303,7 @@ moraleSection:NewButton("morale mod", "makes you not lose morale", function()
         )
     end
 end)
+
 
 
 -- setting
