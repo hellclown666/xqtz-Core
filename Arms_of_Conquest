@@ -258,13 +258,14 @@ LocalPlayer.CharacterAdded:Connect(function()
 end)
 
 -- morale mod
-local moraleTab = Window:NewTab("morale modding")
-local moraleSection = moraleTab:NewSection("inf morale")
+local moraleTab = Window:NewTab("Morale Modding")
+local moraleSection = moraleTab:NewSection("Infinite Morale")
 
-moraleSection:NewButton("morale mod", "makes you not lose morale", function()
+moraleSection:NewButton("Enable Infinite Morale", "Prevents morale loss", function()
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
     local StarterGui = game:GetService("StarterGui")
 
+    -- notification helper
     local function notify(title, text)
         pcall(function()
             StarterGui:SetCore("SendNotification", {
@@ -275,36 +276,42 @@ moraleSection:NewButton("morale mod", "makes you not lose morale", function()
         end)
     end
 
-    -- find value
-    local Game = ReplicatedStorage:FindFirstChild("GameInfo")
-    local Server = Game and Game:FindFirstChild("ServerInfo")
-    local MoraleLoss = Server and Server:FindFirstChild("MoraleLossMinFlagDist")
-
-    if not MoraleLoss then
-        notify(
-            "Error: MoraleLoss Missing",
-            "MoraleLoss configuration was not found."
-        )
+    -- wait for GameInfo
+    local GameInfo = ReplicatedStorage:WaitForChild("GameInfo", 5)
+    if not GameInfo then
+        notify("Error", "GameInfo not found in ReplicatedStorage")
         return
     end
 
-    -- set value
+    -- wait for ServerInfo
+    local ServerInfo = GameInfo:WaitForChild("ServerInfo", 5)
+    if not ServerInfo then
+        notify("Error", "ServerInfo not found in GameInfo")
+        return
+    end
+
+    -- wait for MoraleLossMinFlagDist
+    local MoraleLoss = ServerInfo:WaitForChild("MoraleLossMinFlagDist", 5)
+    if not MoraleLoss then
+        notify("Error", "MoraleLossMinFlagDist not found in ServerInfo")
+        return
+    end
+
+    -- check current value
+    if MoraleLoss.Value >= 1000000 then
+        notify("Notice", "Morale is already maxed ✅")
+        return
+    end
+
+    -- set max morale
     MoraleLoss.Value = 1000000
 
     if MoraleLoss.Value == 1000000 then
-        notify(
-            "Success",
-            "Morale modded successfully" .. " xqtz was here"
-        )
+        notify("Success", "Infinite morale enabled! xqtz was here 🎯")
     else
-        notify(
-            "Error: Change Failed",
-            "The morale value could not be changed."
-        )
+        notify("Error", "Failed to modify morale value ❌")
     end
 end)
-
-
 
 -- setting
 local SettingsTab = Window:NewTab("Settings")
