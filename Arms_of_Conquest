@@ -31,68 +31,68 @@ info:NewLabel("mobile/xbox doesn't get a custom musket")
 local Main = Window:NewTab("bullet drop")
 local MainSection = Main:NewSection("no bullet drop")
  
- 
-MainSection:NewButton("no bullet drop", "Halberd", function()
-   game.Players.LocalPlayer.Backpack["Land Pattern Pistol"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
-end)
- 
-MainSection:NewButton("no bullet drop (mobile)", "(mobile)", function()
-   game.Players.LocalPlayer.Backpack["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
-end)
-
-MainSection:NewButton("no bullet drop", "Officer", function()
-   game.Players.LocalPlayer.Backpack["Land Pattern Pistol "].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
-end)
-
-MainSection:NewButton("no bullet drop ", "Ranker", function()
-   game.Players.LocalPlayer.Backpack["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
-end)
-
-MainSection:NewButton("no bullet drop (Xbox)", "Xbox", function()
-   game.Players.LocalPlayer.Backpack["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
-end)
-
-MainSection:NewButton("No Bullet Drop", "Ranker", function()
+MainSection:NewButton("No Bullet Drop", "Auto-detect weapon", function()
     local Players = game:GetService("Players")
     local StarterGui = game:GetService("StarterGui")
     local player = Players.LocalPlayer
-    local toolName = "1766 Charleville Musket"
 
-    local function notify(title, message)
+    local supportedWeapons = {
+        "1766 Charleville Musket",
+        "Land Pattern Pistol"
+    }
+
+    local function notify(title, text)
         pcall(function()
             StarterGui:SetCore("SendNotification", {
                 Title = title,
-                Text = message,
+                Text = text,
                 Duration = 4
             })
         end)
     end
 
-    local tool = player.Backpack:FindFirstChild(toolName)
+    -- Find weapon in backpack
+    local tool
+    for _, name in ipairs(supportedWeapons) do
+        tool = player.Backpack:FindFirstChild(name)
+        if tool then break end
+    end
+
     if not tool then
-        notify("Error: Weapon Not Found", "Could not find the musket in your backpack.")
+        notify(
+            "Error: Weapon Not Found",
+            "No supported firearm detected in your backpack."
+        )
         return
     end
 
+    -- Find BulletDrop value
     local settings = tool:FindFirstChild("Settings")
     local misc = settings and settings:FindFirstChild("Miscellaneous")
     local bulletDrop = misc and misc:FindFirstChild("BulletDropPerFrame")
 
     if not bulletDrop then
-        notify("Error: Setting Missing", "Bullet drop setting not found on this weapon.")
+        notify(
+            "Error: Setting Missing",
+            "Bullet drop configuration was not found."
+        )
         return
     end
 
-    local success, err = pcall(function()
-        bulletDrop.Value = 0
-    end)
+    -- Apply change
+    bulletDrop.Value = 0
 
-    if success and bulletDrop.Value == 0 then
-        notify("Success", "Bullet drop successfully disabled")
-    elseif not success then
-        notify("Error: Could Not Apply", "Failed to change bullet drop setting: " .. tostring(err))
+    -- Verify
+    if bulletDrop.Value == 0 then
+        notify(
+            "Success",
+            "Bullet drop disabled for " .. tool.Name .. " xqtz was here "
+        )
     else
-        notify("Error: Change Not Applied", "Bullet drop value did not update.")
+        notify(
+            "Error: Change Failed",
+            "The bullet drop value could not be applied."
+        )
     end
 end)
 
