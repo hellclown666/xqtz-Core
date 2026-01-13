@@ -134,7 +134,7 @@ MainSection:NewButton("Fast Reload", "Auto-detect weapon", function()
     --finding the thing
     local settings = tool:FindFirstChild("Settings")
     local misc = settings and settings:FindFirstChild("Miscellaneous")
-    local reloadSpeed = misc and misc:FindFirstChild("ReloadSpeed")  -- <-- updated
+    local reloadSpeed = misc and misc:FindFirstChild("ReloadSpeed")
 
     if not reloadSpeed then
         notify(
@@ -151,7 +151,7 @@ MainSection:NewButton("Fast Reload", "Auto-detect weapon", function()
     if reloadSpeed.Value == 0.1 then
         notify(
             "Success",
-            "Reload speed set to 0.1 for " .. tool.Name .. " 🎯"
+            "Reload speed set to 0.1 for " .. tool.Name .. " "
         )
     else
         notify(
