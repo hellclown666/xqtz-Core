@@ -161,12 +161,10 @@ MainSection:NewButton("Fast Reload", "Auto-detect weapon", function()
     end
 end)
 
---hitbox
---ap = apply
---func = fucntion
---up = update
---
-
+-- hitbox
+-- ap = apply
+-- func = function
+-- up = update
 
 local hitboxTab = Window:NewTab("Hitbox")
 local hitboxSection = hitboxTab:NewSection("HBE")
@@ -199,21 +197,28 @@ local function AssignHitbox(player)
     -- only enemies
     if LocalPlayer.Team and player.Team == LocalPlayer.Team then return end
 
-    local char = player.Character
-    if not char then return end
-    local root = char:FindFirstChild("HumanoidRootPart")
-    if not root then return end
+    local function updateHitbox()
+        local char = player.Character
+        if not char then return end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
 
-    -- up on renderstep
-    local connection
-    connection = RunService.RenderStepped:Connect(function()
         if hbeEnabled then
+            -- up the hitbox
             if root.Size ~= hitboxSize or root.Color ~= hitboxColor then
                 root.Size = hitboxSize
                 root.Color = hitboxColor
                 root.CanCollide = false
                 root.Transparency = 0.5
             end
+        end
+    end
+
+    -- use RenderStepped to constantly update while enabled
+    local connection
+    connection = RunService.RenderStepped:Connect(function()
+        if hbeEnabled then
+            updateHitbox()
         else
             if connection then
                 connection:Disconnect()
@@ -222,19 +227,19 @@ local function AssignHitbox(player)
     end)
 end
 
--- Ap to all players alive
+-- ap to all players alive
 for _, player in ipairs(Players:GetPlayers()) do
     AssignHitbox(player)
 end
 
---ap to new people
+-- ap to new people
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function()
         AssignHitbox(player)
     end)
 end)
 
--- readd people if they died and respawned
+-- re-add people if they died and respawned
 LocalPlayer.CharacterAdded:Connect(function()
     for _, player in ipairs(Players:GetPlayers()) do
         AssignHitbox(player)
