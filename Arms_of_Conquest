@@ -1,3 +1,7 @@
+------------------------------------------------------------------
+-- Join The Discord! https://discord.gg/QZwnfkKS8Y
+------------------------------------------------------------------
+
 setclipboard("https://discord.gg/QZwnfkKS8Y")
 
 game.StarterGui:SetCore("SendNotification", {
@@ -20,8 +24,8 @@ local info = Window:NewTab("test")
 local info = info:NewSection("made with love, xqtz")
 
 info:NewLabel("join discord to make suggestions what to add")
-
---bulletdrop
+info:NewLabel("for the musket the game is so shit it doesnt even gives you the mobile/xbox musket")
+--MAIN
  
 local Main = Window:NewTab("bullet drop")
 local MainSection = Main:NewSection("no bullet drop")
@@ -34,7 +38,19 @@ end)
 MainSection:NewButton("no bullet drop (mobile)", "1766 Charleville Musket (mobile)", function()
    game.ReplicatedStorage.WeaponSets.Mobile["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
 end)
---creds
+
+MainSection:NewButton("no bullet drop", "Officer", function()
+   game.ReplicatedStorage.WeaponSets.Officer["Land Pattern Pistol "].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
+end)
+
+MainSection:NewButton("no bullet drop ", "Ranker", function()
+   game.ReplicatedStorage.WeaponSets.Ranker["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
+end)
+
+MainSection:NewButton("no bullet drop (Xbox)", "Xbox", function()
+   game.ReplicatedStorage.WeaponSets.Xbox["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
+end)
+
 local Credits = Window:NewTab("Credits pls look")
 local Credits = Credits:NewSection("Credits join da discord my nigga")
  
@@ -42,7 +58,9 @@ Credits:NewLabel("Made by _.hell._")
 Credits:NewLabel("go in discord and make suggestions")
 Credits:NewLabel("discord https://discord.gg/QZwnfkKS8Y")
 
---load fin
+-------------------------------------------------------------------------------------
+--things to load
+-------------------------------------------------------------------------------------
 local finish = os.clock()
 
 local time = finish - start
