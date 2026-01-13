@@ -47,6 +47,51 @@ end)
 MainSection:NewButton("no bullet drop (Xbox)", "Xbox", function()
    game.Players.LocalPlayer.Backpack["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
 end)
+MainSection:NewButton("No Bullet Drop", "Ranker", function()
+    local Players = game:GetService("Players")
+    local StarterGui = game:GetService("StarterGui")
+
+    local player = Players.LocalPlayer
+    local toolName = "1766 Charleville Musket"
+
+    local function notify(title, text)
+        pcall(function()
+            StarterGui:SetCore("SendNotification", {
+                Title = title,
+                Text = text,
+                Duration = 3
+            })
+        end)
+    end
+
+    -- find the tool (equipped or in backpack)
+    local tool =
+        player.Character and player.Character:FindFirstChild(toolName)
+        or player.Backpack:FindFirstChild(toolName)
+
+    if not tool then
+        notify("Error", "Musket not found")
+        return
+    end
+
+    local value =
+        tool:FindFirstChild("Settings")
+        and tool.Settings:FindFirstChild("Miscellaneous")
+        and tool.Settings.Miscellaneous:FindFirstChild("BulletDropPerFrame")
+
+    if not value then
+        notify("Error", "BulletDrop value missing")
+        return
+    end
+
+    value.Value = 0
+
+    if value.Value == 0 then
+        notify("Success", "No bullet drop applied")
+    else
+        notify("Failed", "Value was overwritten")
+    end
+end)
 
 --cred
 
