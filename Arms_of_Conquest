@@ -16,7 +16,17 @@ local start = os.clock()
 -- gui
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("xqtz Core", "BloodTheme")
+
+-- poland flag colors
+local colors = {
+    SchemeColor  = Color3.fromRGB(220, 20, 60), 
+    Background   = Color3.fromRGB(245, 245, 245), 
+    Header       = Color3.fromRGB(200, 0, 0),    
+    TextColor    = Color3.fromRGB(0, 0, 0),     
+    ElementColor = Color3.fromRGB(230, 230, 230) 
+}
+
+local Window = Library.CreateLib("xqtz Core", colors)
 
 --info
 
