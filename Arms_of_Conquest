@@ -20,13 +20,17 @@ local Window = Library.CreateLib("xqtz Core", "Midnight")
 
 --info
 
-local info = Window:NewTab("xqtz Core")
+local info = Window:NewTab("xqtz Core for Arms_of_Conquest")
 local info = info:NewSection("made with love, xqtz")
 
 info:NewLabel("join discord to make suggestions what to add")
-info:NewLabel("for the musket the game is so shit it doesnt even gives you the mobile/xbox musket")
+info:NewLabel("mobile/xbox doesn't get a custom musket")
 
 --no bullet drop
+ 
+local Main = Window:NewTab("bullet drop")
+local MainSection = Main:NewSection("no bullet drop")
+ 
  
 MainSection:NewButton("no bullet drop", "Halberd", function()
    game.Players.LocalPlayer.Backpack["Land Pattern Pistol"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
@@ -47,6 +51,7 @@ end)
 MainSection:NewButton("no bullet drop (Xbox)", "Xbox", function()
    game.Players.LocalPlayer.Backpack["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
 end)
+
 MainSection:NewButton("No Bullet Drop", "Ranker", function()
     local Players = game:GetService("Players")
     local StarterGui = game:GetService("StarterGui")
@@ -92,6 +97,9 @@ MainSection:NewButton("No Bullet Drop", "Ranker", function()
         notify("Failed", "Value was overwritten")
     end
 end)
+
+ 
+
 
 --cred
 
