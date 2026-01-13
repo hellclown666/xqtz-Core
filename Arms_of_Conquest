@@ -20,7 +20,7 @@ local Window = Library.CreateLib("xqtz Core", "Midnight")
 
 --info
 
-local info = Window:NewTab("test")
+local info = Window:NewTab("xqtz Core")
 local info = info:NewSection("made with love, xqtz")
 
 info:NewLabel("join discord to make suggestions what to add")
@@ -54,12 +54,12 @@ end)
 
 --cred
 
-local Credits = Window:NewTab("Credits pls look")
-local Credits = Credits:NewSection("Credits join da discord my nigga")
+local Credits = Window:NewTab("Credits")
+local Credits = Credits:NewSection("creds")
  
-Credits:NewLabel("Made by _.hell._")
-Credits:NewLabel("go in discord and make suggestions")
-Credits:NewLabel("discord https://discord.gg/QZwnfkKS8Y")
+Credits:NewLabel("Owner xqtz")
+Credits:NewLabel("tester 4fa")
+Credits:NewLabel("https://discord.gg/QZwnfkKS8Y")
 
 --fin
 
