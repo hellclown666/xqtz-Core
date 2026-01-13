@@ -1,8 +1,6 @@
-------------------------------------------------------------------
--- Join The Discord! https://discord.gg/QZwnfkKS8Y
-------------------------------------------------------------------
-
 setclipboard("https://discord.gg/QZwnfkKS8Y")
+
+--loading speed
 
 game.StarterGui:SetCore("SendNotification", {
    Title = "Script",
@@ -15,6 +13,8 @@ wait(1)
 
 local start = os.clock()
 
+-- gui
+
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local Window = Library.CreateLib("xqtz Core", "Midnight")
 
@@ -25,7 +25,8 @@ local info = info:NewSection("made with love, xqtz")
 
 info:NewLabel("join discord to make suggestions what to add")
 info:NewLabel("for the musket the game is so shit it doesnt even gives you the mobile/xbox musket")
---MAIN
+
+--no bullet drop
  
 local Main = Window:NewTab("bullet drop")
 local MainSection = Main:NewSection("no bullet drop")
@@ -51,6 +52,8 @@ MainSection:NewButton("no bullet drop (Xbox)", "Xbox", function()
    game.ReplicatedStorage.WeaponSets.Xbox["1766 Charleville Musket"].Settings.Miscellaneous.BulletDropPerFrame.Value = 0
 end)
 
+--cred
+
 local Credits = Window:NewTab("Credits pls look")
 local Credits = Credits:NewSection("Credits join da discord my nigga")
  
@@ -58,9 +61,8 @@ Credits:NewLabel("Made by _.hell._")
 Credits:NewLabel("go in discord and make suggestions")
 Credits:NewLabel("discord https://discord.gg/QZwnfkKS8Y")
 
--------------------------------------------------------------------------------------
---things to load
--------------------------------------------------------------------------------------
+--fin
+
 local finish = os.clock()
 
 local time = finish - start
