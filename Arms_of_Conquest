@@ -53,7 +53,6 @@ MainSection:NewButton("no bullet drop (Xbox)", "Xbox", function()
 end)
 
 MainSection:NewButton("no bullet drop", "Ranker", function()
-    local StarterGui = game:GetService("StarterGui")
     local player = game.Players.LocalPlayer
 
     local tool = player.Backpack:FindFirstChild("1766 Charleville Musket")
