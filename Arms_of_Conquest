@@ -23,7 +23,7 @@ local colors = {
     ElementColor = Color3.fromRGB(230, 230, 230) 
 }
 
-local Window = Library.CreateLib("xqtz Core POLAND EDITION!!!", colors)
+local Window = Library.CreateLib("xqtz Core POLAND EDITION", colors)
 
 --info
 
