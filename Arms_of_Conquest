@@ -262,6 +262,9 @@ local moraleTab = Window:NewTab("morale modding")
 local moraleSection = moraleTab:NewSection("inf morale")
 
 moraleSection:NewButton("morale mod", "makes you not lose morale", function()
+   local rep = game:GetService("ReplicatedStorage")
+   local StarterGui = game:GetService("StarterGui")
+
    local function notify(title, text)
       pcall(function()
          StarterGui:SetCore("SendNotification", {
@@ -271,9 +274,23 @@ moraleSection:NewButton("morale mod", "makes you not lose morale", function()
          })
       end)
    end
-   game.ReplicatedStorage.GameInfo.ServerInfo.MoraleLossMinFlagDIST.value = 1000000
 
-   if game.ReplicatedStorage.GameInfo.ServerInfo.MoraleLossMinFlagDIST.value == 1000000 then
+   --find value
+    local Game = rep:FindFirstChild("GameInfo")
+    local Server = Game and Game:FindFirstChild("ServerInfo")
+    local MoraleLoss = Server and Server:FindFirstChild("MoraleLossMinFlagDIST")
+
+    if not MoraleLoss then
+        notify(
+            "Error: MoraleLoss Missing",
+            "MoraleLoss configuration was not found."
+        )
+        return
+    end
+
+   MoraleLoss.value = 1000000
+
+   if MoraleLoss.value == 1000000 then
         notify(
             "Success",
             "morale modded successfully" " xqtz was here "
