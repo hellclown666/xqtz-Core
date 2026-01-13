@@ -161,9 +161,7 @@ MainSection:NewButton("Fast Reload", "Auto-detect weapon", function()
     end
 end)
 
-
 -- hitbox
-
 -- ap = apply
 -- func = function
 -- up = update
@@ -171,10 +169,12 @@ end)
 local hitboxTab = Window:NewTab("Hitbox")
 local hitboxSection = hitboxTab:NewSection("HBE")
 
+-- default sizes
 local hitboxSize = Vector3.new(15, 15, 15)
 local hitboxColor = Color3.fromRGB(255, 0, 0)
 local hbeEnabled = false
 
+-- input for the size
 hitboxSection:NewTextBox("Hitbox Size (X,Y,Z)", "Type like 15,15,15", function(text)
     local x, y, z = text:match("(%d+),(%d+),(%d+)")
     if x and y and z then
@@ -182,19 +182,17 @@ hitboxSection:NewTextBox("Hitbox Size (X,Y,Z)", "Type like 15,15,15", function(t
     end
 end)
 
+-- toggle it 
 hitboxSection:NewToggle("Enable Hitbox", "Apply hitboxes to enemies", function(state)
     hbeEnabled = state
 end)
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
 local LocalPlayer = Players.LocalPlayer
 
-local hitboxSize = Vector3.new(15, 15, 15)
-local hitboxColor = Color3.fromRGB(255, 0, 0)
-local hbeEnabled = false
-local notifiedPlayers = {}
-
+-- helper func for notifications
 local function notify(title, msg)
     pcall(function()
         StarterGui:SetCore("SendNotification", {
@@ -205,67 +203,88 @@ local function notify(title, msg)
     end)
 end
 
+-- track notifications per player
+local notifiedPlayers = {}
+
+-- main hitbox function
 local function ApplyHitbox(player)
     if player == LocalPlayer then return end
+    if LocalPlayer.Team and player.Team == LocalPlayer.Team then return end
 
+    -- wait for character
     local char = player.Character or player.CharacterAdded:Wait()
-    local root = char:WaitForChild("HumanoidRootPart", 5)
+    local root = char:WaitForChild("HumanoidRootPart", 5) -- wait up to 5s
+
     if not root then
         notify("Error", "HumanoidRootPart not found for "..player.Name)
         return
     end
 
-    local originalSize = root.Size
-    local originalColor = root.Color
-    local originalTransparency = root.Transparency
-    local originalCanCollide = root.CanCollide
-
+    -- apply hitbox every frame
     RunService.RenderStepped:Connect(function()
-        if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-        local rootPart = char.HumanoidRootPart
+        if not hbeEnabled then return end
+        if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then return end
 
-        -- check if enabled and if enemy
-        local isEnemy = true
-        if LocalPlayer.Team then
-            isEnemy = (player.Team ~= LocalPlayer.Team)
-        end
+        local rootPart = player.Character.HumanoidRootPart
+        rootPart.Size = hitboxSize
+        rootPart.Color = hitboxColor
+        rootPart.CanCollide = false
+        rootPart.Transparency = 0.5
 
-        if hbeEnabled and isEnemy then
-            rootPart.Size = hitboxSize
-            rootPart.Color = hitboxColor
-            rootPart.Transparency = 0.5
-            rootPart.CanCollide = false
-
-            if not notifiedPlayers[player] then
-                notify("Success", "Hitbox applied to "..player.Name)
-                notifiedPlayers[player] = true
-            end
-        else
-         
-            rootPart.Size = originalSize
-            rootPart.Color = originalColor
-            rootPart.Transparency = originalTransparency
-            rootPart.CanCollide = originalCanCollide
+        if not notifiedPlayers[player] then
+            notify("Success", "Hitbox applied to "..player.Name)
+            notifiedPlayers[player] = true
         end
     end)
 end
 
+-- apply to all existing players
 for _, p in ipairs(Players:GetPlayers()) do
     ApplyHitbox(p)
 end
 
+-- apply to new players
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function()
         ApplyHitbox(player)
     end)
 end)
 
+-- reapply for local player respawn
 LocalPlayer.CharacterAdded:Connect(function()
     for _, p in ipairs(Players:GetPlayers()) do
         ApplyHitbox(p)
     end
 end)
 
+-- morale mod
+local moraleTab = Window:NewTab("morale modding")
+local moraleSection = moraleTab:NewSection("inf morale")
+
+moraleSection:NewButton("morale mod", "makes you not lose morale", function()
+   local function notify(title, text)
+      pcall(function()
+         StarterGui:SetCore("SendNotification", {
+             Title = title,
+             Text = text,
+             Duration = 4
+         })
+      end)
+   end
+   game.ReplicatedStorage.GameInfo.ServerInfo.MoraleLossMinFlagDIST.value = 1000000
+
+   if game.ReplicatedStorage.GameInfo.ServerInfo.MoraleLossMinFlagDIST.value == 1000000 then
+        notify(
+            "Success",
+            "morale modded successfully" " xqtz was here "
+        )
+    else
+        notify(
+            "Error: Change Failed",
+            "The morale value could not be changed."
+        )
+    end
+end)
 
 
 -- setting
