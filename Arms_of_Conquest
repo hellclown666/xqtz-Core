@@ -151,7 +151,7 @@ MainSection:NewButton("Fast Reload", "Auto-detect weapon", function()
     if reloadSpeed.Value == 0.1 then
         notify(
             "Success",
-            "Reload speed set to 0.1 for " .. tool.Name .. " "
+            "Reload speed set to 0.1 for " .. tool.Name .. " xqtz was here "
         )
     else
         notify(
