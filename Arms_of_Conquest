@@ -20,7 +20,7 @@ local Window = Library.CreateLib("xqtz Core", "Midnight")
 
 --info
 
-local info = Window:NewTab("xqtz core Arms of Conquest")
+local info = Window:NewTab("Arms of Conquest")
 local info = info:NewSection("made with love, xqtz")
 
 info:NewLabel("join discord to make suggestions what to add")
@@ -58,41 +58,41 @@ MainSection:NewButton("No Bullet Drop", "Ranker", function()
     local player = Players.LocalPlayer
     local toolName = "1766 Charleville Musket"
 
-    local function notify(title, message, duration)
-        duration = duration or 3
+    local function notify(title, message)
         pcall(function()
             StarterGui:SetCore("SendNotification", {
                 Title = title,
                 Text = message,
-                Duration = duration
+                Duration = 4
             })
         end)
     end
 
     local tool = player.Backpack:FindFirstChild(toolName)
     if not tool then
-        notify("Error: Weapon Not Found", "Could not locate the musket in your backpack.")
+        notify("Error: Weapon Not Found", "Could not find the musket in your backpack.")
         return
     end
 
-    local value =
-        tool:FindFirstChild("Settings") and
-        tool.Settings:FindFirstChild("Miscellaneous") and
-        tool.Settings.Miscellaneous:FindFirstChild("BulletDropPerFrame")
+    local settings = tool:FindFirstChild("Settings")
+    local misc = settings and settings:FindFirstChild("Miscellaneous")
+    local bulletDrop = misc and misc:FindFirstChild("BulletDropPerFrame")
 
-    if not value then
-        notify("Error: Setting Missing", "Bullet drop setting is unavailable on this weapon.")
+    if not bulletDrop then
+        notify("Error: Setting Missing", "Bullet drop setting not found on this weapon.")
         return
     end
-  
+
     local success, err = pcall(function()
-        value.Value = 0
+        bulletDrop.Value = 0
     end)
 
-    if success and value.Value == 0 then
+    if success and bulletDrop.Value == 0 then
         notify("Success", "Bullet drop successfully disabled")
+    elseif not success then
+        notify("Error: Could Not Apply", "Failed to change bullet drop setting: " .. tostring(err))
     else
-        notify("Error: Could Not Apply", "Failed to change the bullet drop setting.")
+        notify("Error: Change Not Applied", "Bullet drop value did not update.")
     end
 end)
 
