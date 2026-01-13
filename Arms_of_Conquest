@@ -209,39 +209,32 @@ local function AssignHitbox(player)
     -- only enemies
     if LocalPlayer.Team and player.Team == LocalPlayer.Team then return end
 
-    local function updateHitbox()
-        local char = player.Character
-        if not char then
-            notify("Error", "Character not found for " .. player.Name)
-            return
-        end
+    local applied = false -- track if we already notified
 
-        local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then
-            notify("Error", "HumanoidRootPart not found for " .. player.Name)
-            return
-        end
-
-        if hbeEnabled then
-            -- up the hitbox
-            root.Size = hitboxSize
-            root.Color = hitboxColor
-            root.CanCollide = false
-            root.Transparency = 0.5
-
-            notify("Success", "Hitbox applied to " .. player.Name)
-        end
-    end
-
-    -- use RenderStepped to constantly update while enabled
+    -- up on RenderStepped
     local connection
     connection = RunService.RenderStepped:Connect(function()
-        if hbeEnabled then
-            updateHitbox()
-        else
-            if connection then
-                connection:Disconnect()
-            end
+        if not hbeEnabled then
+            if connection then connection:Disconnect() end
+            return
+        end
+
+        local char = player.Character
+        if not char then return end
+
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return end
+
+        -- apply hitbox
+        root.Size = hitboxSize
+        root.Color = hitboxColor
+        root.CanCollide = false
+        root.Transparency = 0.5
+
+        -- notify once per player
+        if not applied then
+            notify("Success", "Hitbox applied to " .. player.Name)
+            applied = true
         end
     end)
 end
@@ -293,3 +286,6 @@ game.StarterGui:SetCore("SendNotification", {
    Icon = "",
    Duration = 5
 })
+
+
+--for god sake work 
