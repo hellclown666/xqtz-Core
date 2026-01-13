@@ -189,7 +189,19 @@ end)
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
 local LocalPlayer = Players.LocalPlayer
+
+-- helper func for notifications
+local function notify(title, msg)
+    pcall(function()
+        StarterGui:SetCore("SendNotification", {
+            Title = title,
+            Text = msg,
+            Duration = 4
+        })
+    end)
+end
 
 -- main func to ap hitbox
 local function AssignHitbox(player)
@@ -199,18 +211,25 @@ local function AssignHitbox(player)
 
     local function updateHitbox()
         local char = player.Character
-        if not char then return end
+        if not char then
+            notify("Error", "Character not found for " .. player.Name)
+            return
+        end
+
         local root = char:FindFirstChild("HumanoidRootPart")
-        if not root then return end
+        if not root then
+            notify("Error", "HumanoidRootPart not found for " .. player.Name)
+            return
+        end
 
         if hbeEnabled then
             -- up the hitbox
-            if root.Size ~= hitboxSize or root.Color ~= hitboxColor then
-                root.Size = hitboxSize
-                root.Color = hitboxColor
-                root.CanCollide = false
-                root.Transparency = 0.5
-            end
+            root.Size = hitboxSize
+            root.Color = hitboxColor
+            root.CanCollide = false
+            root.Transparency = 0.5
+
+            notify("Success", "Hitbox applied to " .. player.Name)
         end
     end
 
@@ -245,7 +264,6 @@ LocalPlayer.CharacterAdded:Connect(function()
         AssignHitbox(player)
     end
 end)
-
 --cred
 
 local Credits = Window:NewTab("Credits")
