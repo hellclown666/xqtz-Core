@@ -203,16 +203,22 @@ local function notify(title, msg)
     end)
 end
 
--- track which players have been notified
-local notifiedPlayers = {}
-
 -- main func to ap hitbox
 local function AssignHitbox(player)
     if player == LocalPlayer then return end
     -- only enemies
     if LocalPlayer.Team and player.Team == LocalPlayer.Team then return end
 
-    local function updateHitbox()
+    local applied = false -- track if we already notified
+
+    -- up on RenderStepped
+    local connection
+    connection = RunService.RenderStepped:Connect(function()
+        if not hbeEnabled then
+            if connection then connection:Disconnect() end
+            return
+        end
+
         local char = player.Character
         if not char then return end
 
@@ -226,38 +232,44 @@ local function AssignHitbox(player)
         root.Transparency = 0.5
 
         -- notify once per player
-        if not notifiedPlayers[player] then
+        if not applied then
             notify("Success", "Hitbox applied to " .. player.Name)
-            notifiedPlayers[player] = true
-        end
-    end
-
-    -- run every frame
-    RunService.RenderStepped:Connect(function()
-        if hbeEnabled then
-            updateHitbox()
+            applied = true
         end
     end)
 end
 
--- ap to all current players
+-- ap to all players alive
 for _, player in ipairs(Players:GetPlayers()) do
     AssignHitbox(player)
 end
 
--- new players
+-- ap to new people
 Players.PlayerAdded:Connect(function(player)
     player.CharacterAdded:Connect(function()
         AssignHitbox(player)
     end)
 end)
 
--- respawn
+-- re-add people if they died and respawned
 LocalPlayer.CharacterAdded:Connect(function()
     for _, player in ipairs(Players:GetPlayers()) do
         AssignHitbox(player)
     end
 end)
+
+-- setting
+local SettingsTab = Window:NewTab("Settings")
+local SettingsSection = SettingsTab:NewSection("Custom Settings")
+
+SettingsSection:NewKeybind(
+    "Toggle GUI",                           
+    "open/close", 
+    Enum.KeyCode.Minus,                     
+    function()
+        Library:ToggleUI() 
+    end
+)
 
 --cred
 
@@ -288,6 +300,3 @@ game.StarterGui:SetCore("SendNotification", {
    Icon = "",
    Duration = 5
 })
-
-
---for god sake work 
