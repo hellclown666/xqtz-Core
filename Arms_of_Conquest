@@ -278,7 +278,7 @@ moraleSection:NewButton("morale mod", "makes you not lose morale", function()
     -- find value
     local Game = ReplicatedStorage:FindFirstChild("GameInfo")
     local Server = Game and Game:FindFirstChild("ServerInfo")
-    local MoraleLoss = Server and Server:FindFirstChild("MoraleLossMinFlagDIST")
+    local MoraleLoss = Server and Server:FindFirstChild("MoraleLossMinFlagDist")
 
     if not MoraleLoss then
         notify(
