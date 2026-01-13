@@ -16,7 +16,7 @@ local start = os.clock()
 -- gui
 
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("xqtz Core", "Midnight")
+local Window = Library.CreateLib("xqtz Core", "BloodTheme")
 
 --info
 
@@ -151,13 +151,93 @@ MainSection:NewButton("Fast Reload", "Auto-detect weapon", function()
     if reloadSpeed.Value == 0.1 then
         notify(
             "Success",
-            "Reload speed set to 0.1 for " .. tool.Name .. " xqtz was here "
+            "Reload speed set to 0.1 for " .. tool.Name .. "  xqtz was here "
         )
     else
         notify(
             "Error: Change Failed",
             "The reload speed value could not be applied."
         )
+    end
+end)
+
+--hitbox
+--ap = apply
+--func = fucntion
+--up = update
+--
+
+
+local hitboxTab = Window:NewTab("Hitbox")
+local hitboxSection = hitboxTab:NewSection("HBE")
+
+-- default sizes
+local hitboxSize = Vector3.new(15, 15, 15)
+local hitboxColor = Color3.fromRGB(255, 0, 0)
+local hbeEnabled = false
+
+-- input for the size
+hitboxSection:NewTextBox("Hitbox Size (X,Y,Z)", "Type like 15,15,15", function(text)
+    local x, y, z = text:match("(%d+),(%d+),(%d+)")
+    if x and y and z then
+        hitboxSize = Vector3.new(tonumber(x), tonumber(y), tonumber(z))
+    end
+end)
+
+-- toggle it 
+hitboxSection:NewToggle("Enable Hitbox", "Apply hitboxes to enemies", function(state)
+    hbeEnabled = state
+end)
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- main func to ap hitbox
+local function AssignHitbox(player)
+    if player == LocalPlayer then return end
+    -- only enemies
+    if LocalPlayer.Team and player.Team == LocalPlayer.Team then return end
+
+    local char = player.Character
+    if not char then return end
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+
+    -- up on renderstep
+    local connection
+    connection = RunService.RenderStepped:Connect(function()
+        if hbeEnabled then
+            if root.Size ~= hitboxSize or root.Color ~= hitboxColor then
+                root.Size = hitboxSize
+                root.Color = hitboxColor
+                root.CanCollide = false
+                root.Transparency = 0.5
+            end
+        else
+            if connection then
+                connection:Disconnect()
+            end
+        end
+    end)
+end
+
+-- Ap to all players alive
+for _, player in ipairs(Players:GetPlayers()) do
+    AssignHitbox(player)
+end
+
+--ap to new people
+Players.PlayerAdded:Connect(function(player)
+    player.CharacterAdded:Connect(function()
+        AssignHitbox(player)
+    end)
+end)
+
+-- readd people if they died and respawned
+LocalPlayer.CharacterAdded:Connect(function()
+    for _, player in ipairs(Players:GetPlayers()) do
+        AssignHitbox(player)
     end
 end)
 
